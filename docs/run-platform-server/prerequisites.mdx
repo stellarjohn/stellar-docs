@@ -3,42 +3,46 @@ title: Prerequisites
 sidebar_position: 10
 ---
 
-The Horizon service is responsible for synchronizing with the Stellar network and processing ledger data. We recommend reading the [Configuring section](./configuring.mdx) as a primer on scope of Horizon's services before diving into compute pre-requisites:
-
-- Data ingestion: It ingests data from the decentralized Stellar network.
-- Transaction submission: It submits transactions to the Stellar network.
-- API serving: It serves API requests.
+The Horizon service is responsible for synchronizing with the Stellar network and processing ledger data. We recommend reading the [configuring](./configuring.mdx) section as a primer on scope of Horizon's services before diving into compute pre-requisites.
 
 The Horizon service can be [installed](./installing.mdx) on bare metal or a virtual machine. It is natively supported on both Linux and Windows operating systems.
 
+**Single Instance Deployment model**
+
 At a minimum, following the [Single Instance Deployment model](./configuring.mdx#single-instance-deployment) will require two compute instances:
-* one compute instance for Horizon
-* one compute instance for PostgreSQL server.
+
+- one compute instance for Horizon
+- one compute instance for PostgreSQL server.
 
 To run Horizon, we recommend a single compute profile which is applicable for single or multiple instances, the minimum hardware specifications are:
 
-**Horizon compute instance:**
+**_Horizon compute instance:_**
 
 - CPU: x cores
 - RAM: x GB
 - Storage: SSD with a capacity of x GB
 
-**PostgreSQL database server compute instance:**
+**_PostgreSQL database server compute instance:_**
 
 - CPU: x cores
 - RAM: x GB
-- Storage: SSD with a capacity of x TB (NVMe or Direct Attached Storage) capable of handling >xk IOPS (I/O operations per second).
+- Storage: SSD with a capacity of x TB (NVMe or Direct Attached Storage) capable of handling > xk IOPS (I/O operations per second).
 
-These specifications consider a 30-day retention window for data storage. For a longer retention window, the system requirements will change accordingly. Consult the [ingestion](https://developers.stellar.org/docs/run-api-server/ingestion) for details on data ingestion and history retention, and managing storage requirements.
+These specifications consider a 30-day retention window for data storage. For a longer retention window, the system requirements will change accordingly. Consult the [ingestion](./ingestion.mdx) section for details on data ingestion and history retention, and managing storage requirements.
 
-**Network**
+**Multiple Instance Deployment**
 
-- The compute instance must be able to connect to the PostgreSQL database. The default port for PostgreSQL is 5432.
-- A stable and fast Internet connection is recommended to ensure efficient communication with the Stellar network.
+To ensure high availability, redundancy, and achieve high throughput, please refer to the [scaling](./scaling.mdx) strategy. It provides detailed prerequisites and guidelines for determining the [number of Horizon instances](./configuring.mdx#multiple-instance-deployment) to deploy.
 
-**Production Setup**
+**Network Access**
 
-For a full-scale production setup, multiple instances of Horizon can be run, with each instance performing one or more functions. For details on achieving high availability, redundancy, and high throughput, refer to the [scaling](https://developers.stellar.org/docs/run-api-server/scaling).
+- The Horizon compute instance must be able to connect to the PostgreSQL database instance. The default port for PostgreSQL is 5432.
+- A stable and fast network connection with outbound path to internet is recommended for any Horizon compute instance running the ingestion role. This is to ensure it has efficient link to remote hosts in the [quorum set](https://developers.stellar.org/docs/run-core-node/configuring#choosing-your-quorum-set) for the chosen Stellar network. Network transaction data is emitted from these hosts and received by the Horizon instance during ingestion through its local captive core sub-process.\
+  It is recommended to configure Horizon using the NETWORK config parameter from the [configuring](./configuring.mdx) section. This configuration automatically generates the list of hosts for the quorum set. You can obtain this generated list of hosts anytime by using the command:
+
+  ```bash
+  stellar-horizon --show-network-quorum [testnet|pubnet]
+  ```
 
 **Additional Notes**
 

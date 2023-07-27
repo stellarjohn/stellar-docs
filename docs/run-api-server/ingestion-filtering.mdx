@@ -49,7 +49,7 @@ ADMIN_PORT=<port>
 and
 
 ```
-EXP-ENABLE-INGESTION-FILTERING=True
+EXP_ENABLE_INGESTION_FILTERING=True
 ```
 
 These should be included in addition to the standard ingestion parameters that must be set also to enable the ingestion engine to be running, such as `ingest=true`, etc. Once these flags are included at horizon runtime, filter configurations and their rules are initially empty and the filters are disabled by default. To enable filters, update the configuration settings, refer to the Admin API Docs which are published as Open API 3.0 doc on the Admin Port at `http://localhost:<admin_port>/`. You can paste the contents from that url into any OAPI tool such as [Swagger](https://editor.swagger.io/) which will render a visual explorer of the API endpoints. Follow details and examples for endpoints:
